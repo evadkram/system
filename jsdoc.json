@@ -1,0 +1,21 @@
+{
+  "name": "system",
+  "tags": {
+    "dictionaries": ["jsdoc"]
+  },
+  "source": {
+    "include": ["apps/system/README.md",
+                "apps/system/js"],
+    "exclude": []
+  },
+  "plugins": [
+    "plugins/markdown",
+    "plugins/summarize"
+  ],
+  "opts": {
+    "private": true,
+    "recurse": true,
+    "destination": "docs/system"
+  }
+}
+
