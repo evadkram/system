@@ -9,6 +9,8 @@
    */
   var Launcher = function() {};
   Launcher.prototype = {
+    FILES: ['js/cpu_manager.js'],
+
     start: function() {
       // We need to be sure to get the focus in order to wake up the screen
       // if the phone goes to sleep before any user interaction.
@@ -27,9 +29,27 @@
       });
       window.dispatchEvent(evt);
 
+      LazyLoader.load(this.FILES).then(() => {
+        // Listen for wakelock events
+        window.cpuManager = new CpuManager();
+        window.cpuManager.start();
+
+        // Disable cpuSleepAllowed, need to be explicitely run by user
+        navigator.mozPower.cpuSleepAllowed = false;
+
+        // Turn the screen on
+        navigator.mozPower.screenBrightness = 0.9;
+
+        setTimeout(function () {
+          navigator.mozPower.screenEnabled = true;
+          navigator.mozPower.screenBrightness = 1;
+        }, 100);
+      });
+
       // lean cover loader
       var content = document.getElementById('windows');
       content.innerHTML = '<h1>OS loaded</h1>';
+      document.body.style.background = 'white';
 
       return Promise.resolve();
     }

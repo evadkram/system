@@ -23,7 +23,8 @@
    */
   var App = function() {};
   App.prototype = {
-    FILES: ['js/single_purpose/launcher.js'],
+    FILES: ['js/wake_lock_manager.js',
+            'js/single_purpose/launcher.js'],
     start: function() {
       window.performance.mark('loadEnd');
       return LazyLoader.load(this.FILES).then(() => {
