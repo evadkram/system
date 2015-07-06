@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <title>System app</title>
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1">
     <meta charset="utf-8">
-    <!-- Shared code -->
-    <script src="js/dump.js"></script>
+    <link rel="stylesheet" type="text/css" href="style/main.css"/>
+
+    <!-- main -->
+    <script defer src="service_config.js"></script>
+    <script defer src="js/messenger.js"></script>
+    <script defer src="js/services.js"></script>
+    <!-- entry point -->
+    <script defer src="js/index.js"></script>
   </head>
 
   <body class="theme-settings" role="application">
-    <div id="windows" data-z-index-level="app">
-      <h1>OS booting...</h1>
-      <!-- application windows are added here -->
-    </div>
-    <script defer src="js/lazy_loader.js"></script>
-    <script defer src="js/app.js"></script>
-    <script defer src="js/bootstrap.js"></script>
+    <section id="service-section"></section>
+    <section id="window-section"></section>
   </body>
 </html>
