@@ -4,8 +4,8 @@
     "dictionaries": ["jsdoc"]
   },
   "source": {
-    "include": ["apps/system/README.md",
-                "apps/system/js"],
+    "include": ["README.md",
+                "js"],
     "exclude": []
   },
   "plugins": [
@@ -15,7 +15,7 @@
   "opts": {
     "private": true,
     "recurse": true,
-    "destination": "docs/system"
+    "destination": "docs"
   }
 }
 
