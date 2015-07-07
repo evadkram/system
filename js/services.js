@@ -9,7 +9,7 @@
   var Services = function() {};
   Services.prototype = {
 
-    _dispatchReady: function() {
+    _dispatchSystemMessageListenerReady: function() {
       // With all important event handlers in place, we can now notify
       // Gecko that we're ready for certain system services to send us
       // messages (e.g. the radio).
@@ -37,7 +37,7 @@
         document.activeElement.blur();
         instance.iframe.focus();
         // process next one
-        this._processCreateQueue();
+        this._initNextDaemon();
         return;
       }
       // create messenger
@@ -53,7 +53,7 @@
           instance.iframe.focus();
         }
         // process next one
-        this._processCreateQueue();
+        this._initNextDaemon();
       }.bind(this);
     },
 
@@ -89,49 +89,49 @@
       }
     },
 
-    _processCreateQueue: function() {
+    _initNextDaemon: function() {
       if (this._clonedConfig.length === 0) {
         this.send({'log': 'all services created'});
         delete this._clonedConfig;
-        this._dispatchReady();
+        this._dispatchSystemMessageListenerReady();
         return;
       }
       this._createService(this._clonedConfig.pop());
 
     },
 
-    _createService: function(s) {
-      if (!s) {
+    _createService: function(config) {
+      if (!config) {
         return;
       }
       // create iframe
       var iframe = document.createElement('iframe');
       iframe.setAttribute('mozbrowser', 'true');
-      if (s.type === 'app') {
+      if (config.type === 'app') {
         iframe.setAttribute('remote', 'true');
       }
-      iframe.setAttribute('mozapp', s.manifestURL);
+      iframe.setAttribute('mozapp', config.manifestURL);
       iframe.setAttribute('mozallowfullscreen', 'true');
-      iframe.setAttribute('origin', s.origin);
-      iframe.src = s.origin + s.launchURL;
+      iframe.setAttribute('origin', config.origin);
+      iframe.src = config.origin + config.launchURL;
       iframe.hidden = true;
       iframe.addEventListener('mozbrowsererror', this);
       iframe.addEventListener('mozbrowserloadend', this);
 
       // register
-      this._serviceMap[s.manifestURL] = {
-        'config': s,
+      this._serviceMap[config.manifestURL] = {
+        'config': config,
         'iframe': iframe
       };
       // put on DOM
-      if (s.type === 'window' || s.type === 'app') {
+      if (config.type === 'window' || config.type === 'app') {
         this._windowContainer.appendChild(iframe);
       } else {
         this._serviceContainer.appendChild(iframe);
       }
 
-      this.send({'log': 'service [' + s.manifestURL + '] created'});
-      return this._serviceMap[s.manifestURL];
+      this.send({'log': 'service [' + config.manifestURL + '] created'});
+      return this._serviceMap[config.manifestURL];
     },
 
     send: function(data, targetOrigin) {
@@ -158,7 +158,7 @@
       window.focus();
 
       this._clonedConfig = [].concat(ServiceConfig);
-      this._processCreateQueue();
+      this._initNextDaemon();
     }
   };
 
